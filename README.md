@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![LanguageCount](https://img.shields.io/github/languages/count/ram-sah/Employee-Tracker)](https://github.com/ram-sah/Employee-Tracker)
+[![License](https://img.shields.io/github/repo-size/ram-sah/Employee-Tracker?logo=gitHub)](https://github.com/ram-sah/Employee-Tracker)
+
 
 ## Description: 
 
