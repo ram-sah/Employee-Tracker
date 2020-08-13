@@ -4,7 +4,6 @@
 [![LanguageCount](https://img.shields.io/github/languages/count/ram-sah/Employee-Tracker)](https://github.com/ram-sah/Employee-Tracker)
 [![License](https://img.shields.io/github/repo-size/ram-sah/Employee-Tracker?logo=gitHub)](https://github.com/ram-sah/Employee-Tracker)
 
-
 ## Description: 
 
 This project is a command-line application. It utilizes Dependencies MySql, Inquirer, and console.table for formats the data a little better for our purposes. This Application is a solution for managing a company's employees using node, inquirer, and MySQL.
@@ -40,7 +39,9 @@ This project is licensed under the MIT license.
 ## Questions
             
 <img src="https://github.com/ram-sah.png" alt="avatar" style="border-radius: 50px" width="100" />
-            
+
+[![Author: Ram](https://img.shields.io/badge/Author-RamSah-yellow.svg)](https://github.com/ram-sah)  
+       
 If you have any questions please contact me at : mohan2036@gmail.com
 ### GitHub Prifile: [ram-sah](https://github.com/ram-sah) 
 ### Repository : [Employee-Tracker](https://github.com/ram-sah/Employee-Tracker)
