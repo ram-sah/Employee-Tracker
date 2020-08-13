@@ -1,18 +1,15 @@
 let inquirer = require("inquirer");
 let mysql = require("mysql");
 
-connection.connect(function(err) {
-    if (err) throw err;
-    console.log (err); 
-    start ()
-});
+let connection = require("./db/mysqlConnection");
+
 //Start function 
 function start() {
     inquirer.prompt({
         name: "action",
         type: "list",
         message: "What do you want ?",
-        Choices: [
+        choices: [
             "view all employee",
             "Add Employee",
             "Remove Employee",
@@ -39,3 +36,4 @@ function viewAllEmployee() {
         start();
     });
 }
+start();
