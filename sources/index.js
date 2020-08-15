@@ -18,27 +18,27 @@ function start() {
     type: "list",
     message: "What would you like to do?",
     choices: [
-      "View All Employees By Department",
-      "Add Employee",
-      "Update Employee Role",
-      "Remove Employee",
-      "View All Employees By Manager",
-      "Update Employee Manager",
-      "View All Roles",
-      "View total Utilised Budgets",
-      "Quit"
+      "1. View All Employees By Department",
+      "2. Add Employee",
+      "3. Update Employee Role",
+      "4. Remove Employee",
+      "5. View All Employees By Manager",
+      "6. Update Employee Manager",
+      "7. View All Roles",
+      "8. View total Utilised Budgets",
+      "9. Quit"
     ]
 
   }).then(function (answer) {
     // based on user's answer, either call or the post functions
-    if (answer.action === "View All Employees By Department") {
+    if (answer.action === "1. View All Employees By Department") {
       viewAllEmployee();
     }
-    if (answer.action === "Add Employee") {
+    if (answer.action === "2. Add Employee") {
       addEmployee();
     }
-    if (answer.action === "Update Employee Role") {
-      // ();
+    if (answer.action === "3. Update Employee Role") {
+      updateEmployeeRole();
     }
 
     if (answer.action === "Quit") {
@@ -131,4 +131,45 @@ function addEmployee() {
         });
       });
   });
+}
+//  Update Employee Role function
+function updateEmployeeRole() {
+  connection.query("Select * from employee", function (err, res) {
+    if (err) throw err;
+    //New list of first and last name
+    const names = res.map(element => {
+      return `${element.id}: ${element.firstName} ${element.lastName}`
+    })
+    connection.query("SELECT role_title, id from role", function (err, success){
+      if (err) throw err;
+      const role = success.map(element => element.title);
+      inquirer.prompt([
+        {
+          name: "who",
+          type: "list",
+          choices: names,
+          message: "Whom would you like to update?"
+        },
+        {
+          neme: "role",
+          type: "list",
+          choices: role,
+          message: "What is the title of their new role?"
+        }
+      ]).then(answers => {
+        console.log(answers);
+        const empIdToUpdate = answers.who.split(":")[0];
+        console.log(empIdToUpdate)
+        const chosenRole = success.find(element => {
+          return element.title === answers.role
+        }) 
+        console.log(chosenRole.id);
+        connection.query("UPDATE employee SET roleId=? where id=?", [chosenRole.id, empIdToUpdate], function(err, res){
+          if (err) throw err;
+          console.log(`role successfully changed`)
+          start();
+        })
+      })
+    })
+  })
 }
