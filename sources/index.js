@@ -1,6 +1,8 @@
 let inquirer = require("inquirer");
-// let mysql = require("mysql");
+let chalk = require("chalk");
+let figlet = require("figlet");
 let connection = require("./db/mysqlConnection");
+
 
 connection.connect(err => {
   if (err) {
@@ -8,9 +10,18 @@ connection.connect(err => {
     return;
   }
   console.log(`connected as id ${connection.threadId}`);
+  clearScreen();
   start();
 });
-
+// Clear Screen and start function 
+function clearScreen() {
+  // clear();
+  console.log(
+    chalk.greenBright(
+      figlet.textSync("WELCOME", { horizontalLayout: "full" })
+    )
+  );
+}
 //Start function 
 function start() {
   inquirer.prompt({
@@ -21,14 +32,16 @@ function start() {
       "1. View All Employees By Department",
       "2. Add Employee",
       "3. Update Employee Role",
-      "4. Remove Employee",
-      "5. View All Employees By Manager",
-      "6. Update Employee Manager",
-      "7. View All Roles",
-      "8. View total Utilised Budgets",
-      "9. Quit"
+      "4. View All Roles",
+      "5. View all department",
+      "6. Add Department",
+      "7. Add Role",
+      "8. Remove Employee",
+      "9. View All Employees By Manager",
+      "10. Update Employee Manager",      
+      "11. View total Utilised Budgets",
+      "12. Quit" 
     ]
-
   }).then(function (answer) {
     // based on user's answer, either call or the post functions
     if (answer.action === "1. View All Employees By Department") {
@@ -40,13 +53,14 @@ function start() {
     if (answer.action === "3. Update Employee Role") {
       updateEmployeeRole();
     }
-
-    if (answer.action === "Quit") {
-      console.log("BYE BYE");
-
-    }
+    if (answer.action === "12. Quit") {
+      stop();
+      console.log("FOR VIEWING MY APPLICATION !  BYE BYE.....");
+      connection.end();      
+    }  
   });
 }
+// View all employees function
 function viewAllEmployee() {
   connection.query(
     `SELECT E.id as Employee_ID,E.first_name as First_Name,E.last_name as Last_Name,
@@ -138,11 +152,13 @@ function updateEmployeeRole() {
     if (err) throw err;
     //New list of first and last name
     const names = res.map(element => {
-      return `${element.id}: ${element.firstName} ${element.lastName}`
+      return `${element.id}: ${element.first_name} ${element.last_name}`
     })
     connection.query("SELECT role_title, id from role", function (err, success){
       if (err) throw err;
-      const role = success.map(element => element.title);
+      const role = success.map(element =>{
+        return `${element.id}: ${element.role_title}`
+      });
       inquirer.prompt([
         {
           name: "who",
@@ -151,25 +167,36 @@ function updateEmployeeRole() {
           message: "Whom would you like to update?"
         },
         {
-          neme: "role",
+          name: "role",
           type: "list",
           choices: role,
           message: "What is the title of their new role?"
         }
       ]).then(answers => {
-        console.log(answers);
+        // console.log(answers);
         const empIdToUpdate = answers.who.split(":")[0];
-        console.log(empIdToUpdate)
+        // console.log(empIdToUpdate)
         const chosenRole = success.find(element => {
-          return element.title === answers.role
+          return element.role_title === answers.role.split(": ")[1];
         }) 
-        console.log(chosenRole.id);
-        connection.query("UPDATE employee SET roleId=? where id=?", [chosenRole.id, empIdToUpdate], function(err, res){
+        // console.log(chosenRole.id);
+        connection.query("UPDATE employee SET role_id=? where id=?", [chosenRole.id, empIdToUpdate], function(err, ress){
           if (err) throw err;
-          console.log(`role successfully changed`)
+          console.log(`\nEmployee's role updated successfully!\n`);
           start();
         })
       })
     })
   })
+}
+// stop function 
+function stop() {
+  console.log(
+    chalk.greenBright(
+      figlet.textSync("Thanks!", {
+        horizontalLayout: "full",
+      })
+    )
+  );
+    // process.exit(0);
 }
