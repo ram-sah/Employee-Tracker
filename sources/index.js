@@ -17,7 +17,7 @@ connection.connect(err => {
 function clearScreen() {
   // clear();
   console.log(
-    chalk.greenBright(
+    chalk.bgMagenta(
       figlet.textSync("WELCOME", { horizontalLayout: "full" })
     )
   );
@@ -38,9 +38,9 @@ function start() {
       "7. Add Role",
       "8. Remove Employee",
       "9. View All Employees By Manager",
-      "10. Update Employee Manager",      
+      "10. Update Employee Manager",
       "11. View total Utilised Budgets",
-      "12. Quit" 
+      "12. Quit"
     ]
   }).then(function (answer) {
     // based on user's answer, either call or the post functions
@@ -53,11 +53,14 @@ function start() {
     if (answer.action === "3. Update Employee Role") {
       updateEmployeeRole();
     }
+    if (answer.action === "4. View All Roles") {
+      viewRoles();
+    }
     if (answer.action === "12. Quit") {
       stop();
       console.log("FOR VIEWING MY APPLICATION !  BYE BYE.....");
-      connection.end();      
-    }  
+      connection.end();
+    }
   });
 }
 // View all employees function
@@ -89,33 +92,33 @@ function addEmployee() {
     });
 
     inquirer.prompt([
-        {
-          name: "firstName",
-          type: "input",
-          message: "Enter First Name:",
+      {
+        name: "firstName",
+        type: "input",
+        message: "Enter First Name:",
+      },
+      {
+        name: "lastName",
+        type: "input",
+        message: "Enter Last Name:",
+      },
+      {
+        name: "role",
+        type: "rawlist",
+        choices: function () {
+          var roleList = [];
+          addEmp.forEach((role) => roleList.push(role.role_title));
+          return roleList;
         },
-        {
-          name: "lastName",
-          type: "input",
-          message: "Enter Last Name:",
-        },
-        {
-          name: "role",
-          type: "rawlist",
-          choices: function () {
-            var roleList = [];
-            addEmp.forEach((role) => roleList.push(role.role_title));
-            return roleList;
-          },
-          message: "Please select role of the employee:",
-        },
-        {
-          name: "manager",
-          type: "rawlist",
-          choices: managerList,
-          message: "Please select manager of the employee:",
-        },
-      ])
+        message: "Please select role of the employee:",
+      },
+      {
+        name: "manager",
+        type: "rawlist",
+        choices: managerList,
+        message: "Please select manager of the employee:",
+      },
+    ])
       .then((response) => {
         var roleId;
         addEmp.forEach((role) =>
@@ -154,9 +157,9 @@ function updateEmployeeRole() {
     const names = res.map(element => {
       return `${element.id}: ${element.first_name} ${element.last_name}`
     })
-    connection.query("SELECT role_title, id from role", function (err, success){
+    connection.query("SELECT role_title, id from role", function (err, success) {
       if (err) throw err;
-      const role = success.map(element =>{
+      const role = success.map(element => {
         return `${element.id}: ${element.role_title}`
       });
       inquirer.prompt([
@@ -178,9 +181,9 @@ function updateEmployeeRole() {
         // console.log(empIdToUpdate)
         const chosenRole = success.find(element => {
           return element.role_title === answers.role.split(": ")[1];
-        }) 
+        })
         // console.log(chosenRole.id);
-        connection.query("UPDATE employee SET role_id=? where id=?", [chosenRole.id, empIdToUpdate], function(err, ress){
+        connection.query("UPDATE employee SET role_id=? where id=?", [chosenRole.id, empIdToUpdate], function (err, ress) {
           if (err) throw err;
           console.log(`\nEmployee's role updated successfully!\n`);
           start();
@@ -189,14 +192,29 @@ function updateEmployeeRole() {
     })
   })
 }
+// View all role function
+function viewRoles() {
+  connection.query(
+    "SELECT id as Role_Id,role_title as Role_Title,salary as Salary,department_id as Department_ID FROM role",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      start();
+    }
+  );
+}
+
+
+
+
 // stop function 
 function stop() {
   console.log(
-    chalk.greenBright(
+    chalk.redBright(
       figlet.textSync("Thanks!", {
         horizontalLayout: "full",
       })
     )
   );
-    // process.exit(0);
+  // process.exit(0);
 }
