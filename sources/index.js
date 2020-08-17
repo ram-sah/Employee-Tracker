@@ -17,7 +17,7 @@ function clearScreen() {
   // clear();
   console.log(
     chalk.bgMagenta(
-      figlet.textSync("WELCOME TO MY APP", { horizontalLayout: "full" })
+      figlet.textSync("WELCOME", { horizontalLayout: "full" })
     )
   );
 }
