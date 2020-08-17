@@ -19,13 +19,13 @@ VALUES
   -- insert values for employee table
 INSERT INTO employee(first_name, last_name, role_id, manager_id)
 VALUES
-  ('Kevin', 'varga', 7, 1),
+  ('Kevin', 'varga', 7, 4),
   ('Mohan', 'Sah', 1, 3),
-  ('Tam', 'Bam', 2, NULL),
+  ('Tam', 'Bam', 2, 4),
   ('John', 'varga', 3, NULL),
   ('Dave', 'Doe', 4, 2),
-  ('Jim', 'kuma', 5, NULL),
-  ('piter', 'Duma', 6, NULL);   
+  ('Jim', 'kuma', 5, 1),
+  ('piter', 'Duma', 6, 3);   
 
 Select * from department;
 Select * from role;
